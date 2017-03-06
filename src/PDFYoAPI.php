@@ -1,13 +1,13 @@
 <?php
 
-namespace Pdfyo\PdfyoAPI\Http\Controllers;
+namespace Pdfyo\PdfyoAPI;
 
 /**
  * @license Docsmit API PHP SDK
  * (c) 2014-2015 Docsmit.com, Inc. http://www.docsmit.com
  * License: GNU GPL 3
  */
-class DocsmitAPI {
+class PDFYoAPI {
 
     private $username;
     private $password;
@@ -43,14 +43,14 @@ class DocsmitAPI {
     const SIDED_SINGLE = 1;
     const SIDED_DOUBLE = 2;
 
-    public function __construct($username, $password, $softwareID) {
-        $this->URIBase = ($URIBase != "") ? $URIBase : "https://www.pdfyo.com/api";
+    public function __construct($username, $password) {
         $this->username = $username;
         $this->password = $password;
+        return self::authping ($username, $password);
     }
 
     public static function authping($username, $password) {
-        $process = curl_init(HOST . "/authping");
+        $process = curl_init(self::HOST . "/authping");
         curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($process, CURLOPT_HEADER, 1);
         curl_setopt($process, CURLOPT_USERPWD, $username . ":" . $password);
@@ -59,13 +59,14 @@ class DocsmitAPI {
 //curl_setopt($process, CURLOPT_POSTFIELDS, $payloadName);
         curl_setopt($process, CURLOPT_RETURNTRANSFER, TRUE);
         $return = curl_exec($process);
-        $this->http_code = $this->curl_info["http_code"];
+        $curl_info = curl_getinfo($process);
+        $http_code = $curl_info["http_code"];
         curl_close($process);
-        return $this->http_code;
+        return $http_code;
     }
 
     public static function health() {
-        $process = curl_init(HOST . "/health");
+        $process = curl_init(self::HOST . "/health");
         curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($process, CURLOPT_HEADER, 1);
 //curl_setopt($process, CURLOPT_USERPWD, $username . ":" . $password);
@@ -74,9 +75,10 @@ class DocsmitAPI {
 //curl_setopt($process, CURLOPT_POSTFIELDS, $payloadName);
         curl_setopt($process, CURLOPT_RETURNTRANSFER, TRUE);
         $return = curl_exec($process);
-        $this->http_code = $this->curl_info["http_code"];
+        $curl_info = curl_getinfo($ch);
+        $http_code = $curl_info["http_code"];
         curl_close($process);
-        return $this->http_code;
+        return $http_code;
     }
 
     public function responseBody() {
@@ -105,7 +107,7 @@ class DocsmitAPI {
 
     public function send($params) {
 
-        $process = curl_init(HOST . "/pdfgen");
+        $process = curl_init(self::HOST . "/pdfgen");
         curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($process, CURLOPT_HEADER, 1);
         curl_setopt($process, CURLOPT_USERPWD, $username . ":" . $password);

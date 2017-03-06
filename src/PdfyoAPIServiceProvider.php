@@ -18,13 +18,13 @@ class PdfyoAPIServiceProvider extends ServiceProvider
     public function boot()
     {
         // use this if your package has views
-        $this->loadViewsFrom(realpath(__DIR__.'/resources/views'), 'pdfyoapi');
+//        $this->loadViewsFrom(realpath(__DIR__.'/resources/views'), 'pdfyoapi');
         
         // use this if your package has lang files
-        $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'pdfyoapi');
+//        $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'pdfyoapi');
         
         // use this if your package has routes
-        $this->setupRoutes($this->app->router);
+//        $this->setupRoutes($this->app->router);
         
         // use this if your package needs a config file
         // $this->publishes([
@@ -66,7 +66,7 @@ class PdfyoAPIServiceProvider extends ServiceProvider
     private function registerSkeleton()
     {
         $this->app->bind('pdfyoapi',function($app){
-            return new Skeleton($app);
+            return new PDFYoAPI($app);
         });
     }
 }
