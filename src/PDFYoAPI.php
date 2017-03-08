@@ -46,7 +46,6 @@ class PDFYoAPI {
     public function __construct($username, $password) {
         $this->username = $username;
         $this->password = $password;
-        return self::authping ($username, $password);
     }
 
     public static function authping($username, $password) {
@@ -105,17 +104,26 @@ class PDFYoAPI {
         return ( $this->http_code == 200 || $this->http_code == 201);
     }
 
-    public function send($params) {
+    public function send($params = null) {
+        if ($params == null) {
+            $params['html'] = $this->html;
+            $params['testing'] = $this->testing;
+            $params['mail'] = $this->mail;
+            $params['fields'] = $this->fields;
+            $params['email'] = $this->email;
+        }
 
         $process = curl_init(self::HOST . "/pdfgen");
         curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($process, CURLOPT_HEADER, 1);
-        curl_setopt($process, CURLOPT_USERPWD, $username . ":" . $password);
+        curl_setopt($process, CURLOPT_USERPWD, $this->username . ":" . $this->password);
         curl_setopt($process, CURLOPT_TIMEOUT, 30);
         curl_setopt($process, CURLOPT_POST, 1);
         curl_setopt($process, CURLOPT_POSTFIELDS, json_encode($params));
         curl_setopt($process, CURLOPT_RETURNTRANSFER, TRUE);
-        $return = curl_exec($process);
+        $this->response_body = curl_exec($process);
+        $this->curl_info = curl_getinfo($process);
+        $this->http_code = $this->curl_info["http_code"];
         curl_close($process);
     }
 
