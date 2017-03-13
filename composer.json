@@ -1,7 +1,7 @@
 {
     "name": "pdfyo/pdfyoapi",
     "type": "library",
-    "description": ":package_description",
+    "description": "Create PDFs with the PDFYo API and mail them through the USPS with Docsmit.com",
     "keywords": [
         "pdfyo",
         "pdfyoapi"
